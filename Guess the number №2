@@ -1,0 +1,62 @@
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import java.util.Random;
+
+public class MainActivity extends AppCompatActivity {
+    private int randomNumber;
+    private int attempts;
+    private TextView textViewHint;
+    private EditText editTextNumber;
+    private Button buttonGuess;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        textViewHint = findViewById(R.id.textViewHint);
+        editTextNumber = findViewById(R.id.editTextNumber);
+        buttonGuess = findViewById(R.id.buttonGuess);
+
+        initializeGame();
+        
+        buttonGuess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkGuess();
+            }
+        });
+    }
+
+    private void initializeGame() {
+        Random random = new Random();
+        randomNumber = random.nextInt(100) + 1;
+        attempts = 0;
+        textViewHint.setText("Попробуй угадать число от 1 до 100:");
+    }
+
+    private void checkGuess() {
+        String input = editTextNumber.getText().toString();
+        if (input.isEmpty()) {
+            return;
+        }
+
+        int guess = Integer.parseInt(input);
+        attempts++;
+
+        if (guess == randomNumber) {
+            textViewHint.setText("Поздравляю! Ты угадал число " + randomNumber + " за " + attempts + " попыток.");
+            initializeGame();
+        } else if (guess < randomNumber) {
+            textViewHint.setText("Попробуй число больше.");
+        } else {
+            textViewHint.setText("Попробуй число меньше.");
+        }
+
+        editTextNumber.setText("");
+    }
+}
